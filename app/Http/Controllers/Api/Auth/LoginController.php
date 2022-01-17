@@ -103,6 +103,15 @@ class LoginController extends Controller
     }
 
 
+    public function logout()
+    {
+       auth()->logout();
+       
+
+        return response()->json(['status' => 'success', 'message' => 'LOGGED OUT']);
+    }
+
+
 
 
 }
