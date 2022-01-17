@@ -76,7 +76,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-   
+    
 
     public function register(Request $request){
         $email = request('email') ?: null;
