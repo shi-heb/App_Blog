@@ -12,6 +12,7 @@ use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Repositories\CustomResponse;
+use App\Http\Requests\User\ProfileUpdateRequest;
 
 
 
@@ -109,6 +110,24 @@ class LoginController extends Controller
        
 
         return response()->json(['status' => 'success', 'message' => 'LOGGED OUT']);
+    }
+
+    public function getMyProfile()
+    {
+        return response()->json(auth('api')->user());
+
+    }
+
+
+    public function updateProfile(ProfileUpdateRequest $request)
+    {
+        $authUser = auth()->user();
+        $name = $request->input('name', null);
+        $email  = $request->input('email', null);
+        $userRepository = new UserRepository($authUser);
+        $userRepository->update($email, $name);
+
+        return response()->json([ 'data' => $authUser, ]);
     }
 
 

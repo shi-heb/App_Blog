@@ -6,6 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
+use Dotenv\Exception\ValidationException;
+use Illuminate\Auth\Events\PasswordReset;
+
 class ResetPasswordController extends Controller
 {
     /*
@@ -27,4 +38,7 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+
+
+   
 }

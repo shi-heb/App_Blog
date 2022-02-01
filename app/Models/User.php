@@ -6,10 +6,17 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Carbon;
+
 
 class User extends Authenticatable implements JWTSubject
 {
+    //public $timestamps = false;
+    protected $dateFormat = 'U';
+
+
     use Notifiable;
+    
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +26,8 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name', 'email', 'password','api_token',
     ];
+   
+
 
     /**
      * The attributes that should be hidden for arrays.
@@ -36,6 +45,9 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime:Y-m-d',
+        'updated_at' => 'datetime:Y-m-d',
+       
     ];
 
     public function pictures()
@@ -49,5 +61,16 @@ class User extends Authenticatable implements JWTSubject
 
     public function getJWTIdentifier(){ return $this->getKey(); }
     public function getJWTCustomClaims() { return []; }
+    /*public function getCreatedAtAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        return $date->format('d-m-Y');
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        return $date->format('d-m-Y');
+    }*/
    
 }

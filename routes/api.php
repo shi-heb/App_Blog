@@ -30,6 +30,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['auth:api']], static function () {
     
         Route::post('/logout', [\App\Http\Controllers\Api\Auth\LoginController::class, 'logout'])->name('logout');
+        Route::get('/me', [\App\Http\Controllers\Api\Auth\LoginController::class, 'getMyProfile'])->name('getMyProfile');
+        Route::post('/updateProfile', [\App\Http\Controllers\Api\Auth\LoginController::class, 'updateProfile'])->name('updateProfile');
+       
+
 
 
 });

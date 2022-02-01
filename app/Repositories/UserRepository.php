@@ -55,5 +55,21 @@ class UserRepository
 
 
 
+    public function update($email = null, $name = null)
+    {
+        if ($email) {
+            $this->user->email = $email;
+        }
+
+        if ($name) {
+            $this->user->name = $name;
+        }
+
+          $this->user->save();
+    }
+
+
+
+
 
 }
