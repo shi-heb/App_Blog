@@ -32,6 +32,12 @@ Route::group(['middleware' => ['auth:api']], static function () {
         Route::post('/logout', [\App\Http\Controllers\Api\Auth\LoginController::class, 'logout'])->name('logout');
         Route::get('/me', [\App\Http\Controllers\Api\Auth\LoginController::class, 'getMyProfile'])->name('getMyProfile');
         Route::post('/updateProfile', [\App\Http\Controllers\Api\Auth\LoginController::class, 'updateProfile'])->name('updateProfile');
+
+        Route::group(['prefix' => 'posts/'], function (){
+        Route::post('/create', [\App\Http\Controllers\Api\PostController::class, 'store'])->name('store');
+        Route::get('/{post_id}', [\App\Http\Controllers\Api\PostController::class, 'show'])->name('show');
+        Route::delete('/{post_id}', [\App\Http\Controllers\Api\PostController::class, 'destroy'])->name('destroy');
+    });
        
 
 
