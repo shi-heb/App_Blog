@@ -20,4 +20,16 @@ class Post extends Model
     public function users(){
         return $this->belongsTo('App\Models\User');
     }
+
+     /**
+     * @param $customer_id
+     * @return string
+     */
+    public function checkOwner($id)
+    {
+        if ($this->user_id !== $id) {
+            abort(403);
+        }
+    }
+
 }

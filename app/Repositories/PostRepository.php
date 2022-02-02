@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Post;
+use App\Exceptions\ModelNotSavedException;
 
 class PostRepository
 {
@@ -41,21 +42,26 @@ class PostRepository
     }
 
 
-    public function update($title = null, $description = null, $source = null)
+    public function update($title , $description , $source )
     {
-        if ($title) {
-            $this->post->title = $title;
-        }
+       
 
-        if ($description) {
-            $this->post->description = $description;
-        }
+        $this->post->title = $title;
+        $this->post->description = $description;
+        $this->post->source = $source;
 
-        if ($source) {
-            $this->post->source = $source;
-        }
+          if (!$this->post->save()) {
+          //  throw new ModelNotSavedException();
 
-          $this->user->save();
+         
+        }
+        return $this->post;
+    }
+
+    public function delete()
+    {
+       
+        return $this->post->delete();
     }
 
 

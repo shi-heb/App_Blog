@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\PostRepository;
 use App\Http\Requests\User\PostUpdateRequest;
+use Illuminate\Support\Facades\Validator;
+use Dotenv\Exception\ValidationException;
 
 
 use App\Models\Post;
+
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -65,32 +69,64 @@ class PostController extends Controller
 }
       return response()->json([
        "success" => true,
-       "message" => "Product retrieved successfully.",
+       "message" => "Post retrieved successfully.",
        "data" => $post
     ]);
 }
 
-public function destroy($id)
+
+
+public function destroy(Request $request)
 {
-$post = Post::find($id);
-$post->delete();
-return response()->json([
-"success" => true,
-"message" => "Product deleted successfully.",
-"data" => $post
-]);
+    //$post = Post::query()->findOrFail($request->input('id'));
+
+    $user_id = auth('api')->id();
+    
+    $user = User::query()->findOrFail($user_id);
+    $post = $user->posts()->findOrFail($request->input('id'));
+    
+    
+    
+    $res = (new PostRepository($post))->delete();
+    if ($res) {
+        return response()->json(['status'=>"success"],200);
+    } else {
+        return response()->json(['status'=>"fail"],400);
+    }
 }
 
-public function updatePost(PostUpdateRequest $request)
+
+
+
+
+public function updatePost(Request $request)
 {
     
-    $title = $request->input('title', null);
-    $description  = $request->input('description', null);
-    $source  = $request->input('source', null);
-    $postRepository = new UserRepository($authUser);
-    $postRepository->update($title, $description,$source);
-
-    return response()->json([ 'data' => $authUser, ]);
+    $validator= null;
+    try{
+        $validator = Validator::make($request->all(), [
+            'title' => ['required', 'string'],
+            'description' => ['required', 'string'],
+            'source' => ['required', 'string'],
+        ]);
+        if ($validator->fails()){
+            throw new ValidationException();
+        }
+    }catch (ValidationException $e){
+        return response()->json($validator->errors(), 422);
+    }
+    $user_id = auth('api')->id();
+    //$post = $user->posts->findOrFail($id);
+    $user = User::query()->findOrFail($user_id);
+    $post = $user->posts()->findOrFail($request->input('id'));
+    
+   // $post = Post::query()->findOrFail($request->input('id'));
+    $title = $request->input('title');
+    $description = $request->input('description');
+    $source = $request->input('source');
+    $new_post = (new PostRepository($post))->update($title,$description,$source);
+  
+    return response()->json(['status'=>'success', 'post'=>$new_post],200);
 }
 
 
