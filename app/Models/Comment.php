@@ -10,7 +10,7 @@ class Comment extends Model
     public function users(){
         return $this->belongsTo('App\Models\User');
     }
-    public function pictures(){
+    public function posts(){
         return $this->belongsTo('App\Models\Post');
     }
 }

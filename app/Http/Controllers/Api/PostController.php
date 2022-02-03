@@ -131,4 +131,25 @@ public function updatePost(Request $request)
 
 
 
+
+public function postGetAllComments($id)
+    { $post = Post::query()->findOrFail($id);
+        $com = $post->comments()->get();    
+        
+               if (is_null($com)) {
+               //return $this->sendError('Post not found.');
+               return response()->json([
+                'status' => 'fail',
+                'post' => $com
+            ], 404);
+    }
+          return response()->json([
+           "success" => true,
+           "message" => "comments retrieved successfully.",
+           "data" => $com
+        ]);
+    }
+
+
+
 }

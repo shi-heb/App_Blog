@@ -35,10 +35,20 @@ Route::group(['middleware' => ['auth:api']], static function () {
 
         Route::group(['prefix' => 'posts/'], function (){
         Route::post('/create', [\App\Http\Controllers\Api\PostController::class, 'store'])->name('store');
+        Route::post('/{post_id}/comment/', [\App\Http\Controllers\Api\CommentController::class, 'comment'])->name('comment');
         Route::get('/{post_id}', [\App\Http\Controllers\Api\PostController::class, 'show'])->name('show');
+        Route::get('/comment/{comment_id}', [\App\Http\Controllers\Api\CommentController::class, 'show'])->name('show');
         Route::delete('/', [\App\Http\Controllers\Api\PostController::class, 'destroy'])->name('destroy');
+        Route::delete('/comment', [\App\Http\Controllers\Api\CommentController::class, 'deleteComment'])->name('deleteComment');
         Route::post('/update', [\App\Http\Controllers\Api\PostController::class, 'updatePost'])->name('apdate');
+        Route::get('/comments/{id}', [\App\Http\Controllers\Api\PostController::class, 'postGetAllComments'])->name('postGetAllComments');
     });
+
+  /*  Route::group(['prefix' => 'comments/'], function (){
+        Route::post('post/{post_id}/', [\App\Http\Controllers\Api\CommentController::class, 'comment'])->name('comment');
+        Route::get('/{comment_id}', [\App\Http\Controllers\Api\CommentController::class, 'show'])->name('show');
+        Route::delete('/', [\App\Http\Controllers\Api\CommentController::class, 'deleteComment'])->name('deleteComment');
+    }); */   
        
 
 
