@@ -7,7 +7,8 @@ use App\Models\User;
 use App\Models\Comment;
 use App\Repositories\CommentRepository;
 use App\Http\Controllers\Controller;
-
+use App\Mail\MyTestMail;
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
 
@@ -36,6 +37,9 @@ class CommentController extends Controller
       
       
         $commentaire = CommentRepository::create($user_id, $post_id,$data['comment']);
+        $user = auth('api')->user();
+        Mail::to($user->email)->send(new MyTestMail($user->name,$data['comment']));
+
 
         return response()->json([
             'status' => 'success',
@@ -82,5 +86,10 @@ class CommentController extends Controller
         return response()->json(['status'=>"fail"],400);
     }
 }
+
+
+
+
+
     
 }
