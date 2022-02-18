@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Models;
+use App\Models\Comment;
+use App\Models\Post;
+use Illuminate\Support\Facades\DB;
+
 
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +16,7 @@ use Illuminate\Support\Carbon;
 class User extends Authenticatable implements JWTSubject
 {
     //public $timestamps = false;
-    protected $dateFormat = 'U';
+   
 
 
     use Notifiable;
@@ -55,22 +59,31 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Models\Post');
     }
     
-    public function comments(){
-        return $this->hasMany('App\Models\Comment');
+   public function comments(){
+       return $this->hasMany('App\Models\Comment');
+      // return $this->hasManyThrough(Comment::class, Post::class);
     }
 
     public function getJWTIdentifier(){ return $this->getKey(); }
     public function getJWTCustomClaims() { return []; }
-    /*public function getCreatedAtAttribute($value)
-    {
-        $date = Carbon::parse($value);
-        return $date->format('d-m-Y');
-    }
 
-    public function getUpdatedAtAttribute($value)
+    /*public function comments()
     {
-        $date = Carbon::parse($value);
-        return $date->format('d-m-Y');
+        return $this->hasManyThrough(
+            Comment::class,
+            Post::class,
+            'user_id', // Foreign key on the environments table...
+            'post_id', // Foreign key on the deployments table...
+            'id', // Local key on the projects table...
+            'id' // Local key on the environments table...
+        );
     }*/
+
+ 
+   
+
+    
    
 }
+
+

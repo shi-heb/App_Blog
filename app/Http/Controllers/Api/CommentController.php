@@ -38,7 +38,7 @@ class CommentController extends Controller
       
         $commentaire = CommentRepository::create($user_id, $post_id,$data['comment']);
         $user = auth('api')->user();
-        Mail::to($user->email)->send(new MyTestMail($user->name,$data['comment']));
+       // Mail::to($user->email)->send(new MyTestMail($user->name,$data['comment']));
 
 
         return response()->json([

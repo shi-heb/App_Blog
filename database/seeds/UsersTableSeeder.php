@@ -14,12 +14,13 @@ class UsersTableSeeder extends Seeder
     {
         $date = now();
         $data = [
-            ["id"=>91,
-            "name"=>'user1',
-            "password"=>"azeryty123",
+            ["id"=>204,
+            "name"=>'useradmin',
+            "password"=>bcrypt("24089974"),
             "created_at"=>$date,
             "updated_at"=>$date,
-            "email"=>"email1@live31.fr"
+            "email"=>"adminapp@live.fr",
+            "role"=>"admin"
 
         ],
         ];
