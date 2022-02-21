@@ -36,7 +36,9 @@ class UserController extends Controller
     }
 
 
-
+/*
+ * return all posts posted between two dates gives a parameter
+ */
     public function getPosts(Request $request)
     {
           $start_date =  Carbon::parse($request->start_date)->startOfDay()->toDateTimeString();
@@ -53,6 +55,10 @@ class UserController extends Controller
     return($posts);
     }
 
+      /*
+       * get all users sorted with their activities between a range of date
+       * the return contain index of the connected user with a list of sorted users
+       */
     public function getUsersbyPostsAndComments(Request $request){
 
           $authUserID = auth('api')->user()->id;
@@ -81,7 +87,10 @@ class UserController extends Controller
                 //dd($sortedUsers);
 
 
-
+            /*
+             * you can work with a different methode to get sorted users list
+             * by creating a list of users
+             */
             foreach( $users as $user) {
                   if ($user->id !==Auth::id()) {
                         $sortedUsers->push($user);
@@ -108,7 +117,9 @@ class UserController extends Controller
 
            }
 
-
+           /*
+            * map all user with posts who comments
+            */
            public function UserCommentOn()
            {
                $users=DB::table("users")

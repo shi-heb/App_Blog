@@ -104,8 +104,8 @@ public function destroy(Request $request)
 
 
 
-public function updatePost(Request $request)
-{
+  public function updatePost(Request $request)
+  {
 
     $validator= null;
     try{
@@ -136,7 +136,9 @@ public function updatePost(Request $request)
 
 
 
-
+/*
+ * return all comments related to all posts
+ */
 public function postGetAllComments($id)
     { $post = Post::query()->findOrFail($id);
         $com = $post->comments()->get();
@@ -155,7 +157,9 @@ public function postGetAllComments($id)
         ]);
     }
 
-
+/*
+ * return posts most commented between a range of date
+ */
     public function getTopPosts(Request $request)
     {
          $start_date =  Carbon::parse($request->start_date)->startOfDay()->toDateTimeString();
@@ -169,7 +173,9 @@ public function postGetAllComments($id)
 
           return($posts);
         }
-
+         /*
+          * search comments that contain text given as parameter
+          */
         public function serachIntoComments(Request $request){
             $item=$request->text;
 
@@ -185,6 +191,9 @@ public function postGetAllComments($id)
             return ($posts);
         }
 
+        /*
+         * return only posts who are commented
+         */
         public function CommentedPosts(){
 
            $posts = Post::select(DB::raw('posts.*'))
@@ -194,7 +203,9 @@ public function postGetAllComments($id)
             return ($posts);
         }
 
-
+       /*
+        * return posts who with such number of comments
+        */
         public function postsByNumberOfComments(Request $request){
             $nb_comments=$request->nb;
 
