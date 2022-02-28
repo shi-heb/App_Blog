@@ -61,10 +61,35 @@ class LoginController extends Controller
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
-           
+
         ]);
     }
-
+    /**
+     * @OA\Post(
+     * path="/api/login",
+     * summary="Sign in",
+     * description="Login by email, password",
+     * operationId="authLogin",
+     * tags={"auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"email","password"},
+     *       @OA\Property(property="email", type="string", format="email", example="cbenhassine@anypli.com"),
+     *       @OA\Property(property="password", type="string", format="password", example="24089974"),
+     *
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *        )
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $this->validateLogin($request);
@@ -87,9 +112,9 @@ class LoginController extends Controller
                 // something went wrong whilst attempting to encode the token
                 return response()->json(['error' => 'could_not_create_token'], 500);
             }
-           
+
             return CustomResponse::respondWithToken($token, $user);
-         
+
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -98,16 +123,16 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
-       
-       
-        
+
+
+
     }
 
 
     public function logout()
     {
        auth()->logout();
-       
+
 
         return response()->json(['status' => 'success', 'message' => 'LOGGED OUT']);
     }

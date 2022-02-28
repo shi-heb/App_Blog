@@ -59,9 +59,9 @@ class RegisterController extends Controller
            "email.required" => "vous devez specifier votre mail",
            "password.required" => "vous devez specifier votre password",
            "name.required" => "vous devez specifier votre nom",
-           
 
-         
+
+
         ];
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
@@ -76,7 +76,35 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    
+
+    /**
+     * @OA\Post(
+     * path="/api/register",
+     * summary="sign up",
+     * description="Register to get your credentiels",
+     * operationId="authRegister",
+     * tags={"auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user informations",
+     *    @OA\JsonContent(
+     *       required={"name,email","password"},
+     *       @OA\Property(property="name", type="string",  example="here is my name"),
+     *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+     *
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *        )
+     *     )
+     * )
+     */
+
 
     public function register(Request $request){
         $email = request('email') ?: null;
@@ -97,7 +125,7 @@ class RegisterController extends Controller
         }
 
 
-        
+
 
     }
 
@@ -119,7 +147,7 @@ class RegisterController extends Controller
     {
         $user = UserRepository::create( $data['name'],$data['email'], $data['password']);
 
-       
+
         return $user;
     }
 

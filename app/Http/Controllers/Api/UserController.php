@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use App\Http\Requests\UsergetTheMoreActifUsersRequest;
+
 
 
 
@@ -14,25 +17,22 @@ use Carbon\Carbon;
 
 
 use App\Models\User;
-use mysql_xdevapi\Table;
+//use mysql_xdevapi\Table;
+
 
 class UserController extends Controller
-{
+{/**
+ * @OA\Info(
+ *     title="My the best API",
+ *     version="1.0.0")
+ */
     public function getUsers(Request $request)
     {
-          $start_date =  Carbon::parse($request->start_date)->startOfDay()->toDateTimeString();
-          $end_date = Carbon::parse($request->end_date)->endOfDay()->toDateTimeString();
-
-
-          $users = User::select(DB::raw('users.*, count(*) as total_posts'))
-          ->join('posts', 'users.id', '=', 'posts.user_id')
-          ->whereBetween('posts.created_at',[$start_date,$end_date])
-          ->groupBy('user_id')
-          ->orderBy('total_posts', 'desc')
-
-          ->get();
-
-    return($users);
+        $topPosts = (new UserRepository())->getUsersList($request->get('start'),$request->get('end'));
+        return response()->json([
+            'status' => 'success',
+            'topPosts ' => $topPosts
+        ], 200);
     }
 
 
@@ -41,63 +41,27 @@ class UserController extends Controller
  */
     public function getPosts(Request $request)
     {
-          $start_date =  Carbon::parse($request->start_date)->startOfDay()->toDateTimeString();
-          $end_date = Carbon::parse($request->end_date)->endOfDay()->toDateTimeString();
-
-
-          $posts = Post::select(DB::raw('posts.*, count(*) as total_posts'))
-          ->join('users', 'posts.users_id', '=', 'users.id')
-          ->whereBetween('posts.created_at',[$start_date,$end_date])
-          ->groupBy('post_id')
-          ->orderBy('total_posts', 'desc')
-          ->get();
-
-    return($posts);
+        $topPosts = (new UserRepository())->filterPosts($request->get('start'),$request->get('end'));
+        return response()->json([
+            'status' => 'success',
+            'topPosts ' => $topPosts
+        ], 200);
     }
 
       /*
        * get all users sorted with their activities between a range of date
        * the return contain index of the connected user with a list of sorted users
        */
-    public function getUsersbyPostsAndComments(Request $request){
+    public function getTheMoreActifUsers(UsergetTheMoreActifUsersRequest $request){
 
-          $authUserID = auth('api')->user()->id;
-          $start_date =  Carbon::parse($request->start_date)->startOfDay()->toDateTimeString();
-          $end_date = Carbon::parse($request->end_date)->endOfDay()->toDateTimeString();
-
-          $users = User::withCount(['posts', 'comments'])
-              // ->orderByRaw("CASE WHEN  users.id = $i THEN 1 Else 2 END")
-           ->join('posts', 'users.id', '=', 'posts.user_id')
-           ->join('comments', 'users.id', '=', 'comments.user_id')
-           ->whereBetween('posts.created_at',[$start_date,$end_date])
-           ->whereBetween('comments.created_at',[$start_date,$end_date])
-
-           ->groupBy ('users.id')
-
-           ->orderBy ( DB::raw("`posts_count`+`comments_count`"), 'desc')
-           ->get();
-          $indexAuthUser = $users->search(function($user) {
-                  return $user->id === Auth::id();
-                                               });
-                  $authUserID = auth('api')->user()->id;
-
-                $ListOfSortedUsers=$users->toQuery()->orderByRaw("CASE WHEN  users.id = $authUserID  THEN 1 Else 2 END")->get();
-
-                $sortedUsers = collect([$users[$indexAuthUser]]);
-                //dd($sortedUsers);
+        $topUsers = (new UserRepository())->sortUsers($request->get('start_date'),$request->get('end_date'));
+        return response()->json([
+            'status' => 'success',
+            'topUsers' => $topUsers
+        ], 200);
 
 
-            /*
-             * you can work with a different methode to get sorted users list
-             * by creating a list of users
-             */
-            foreach( $users as $user) {
-                  if ($user->id !==Auth::id()) {
-                        $sortedUsers->push($user);
-                  }
-            }
 
-                return ([$indexAuthUser,$ListOfSortedUsers]);
            }
 
            public function mapUsersWithPosts()
