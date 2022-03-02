@@ -1,0 +1,550 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "App_Blog"
+    },
+    "paths": {
+
+        "/api/login": {
+            "post": {
+                "description": "login",
+                "parameters": [
+
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "user email",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "password with email",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "401": {
+                        "description": "invalid credentials"
+                    },
+                    "403": {
+                        "description": "customer blocked account"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    },
+                    "500": {
+                        "description": "could not create token"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "description": "registration",
+                "parameters": [
+
+
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "last name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "email unique",
+                        "required": false,
+                        "type": "string"
+                    },
+
+
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "password required with email",
+                        "required": false,
+                        "type": "string"
+                    }
+
+
+
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    },
+                    "403": {
+                        "description": "unauthorized / user account blocked"
+                    },
+                    "400": {
+                        "description": "fail"
+                    }
+                }
+            }
+        },
+
+        "/api/posts/": {
+            "delete": {
+                "description": "delete a specific comment)",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id of the post",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "tags": [
+                    "post"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "fail"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    }
+                }
+            }
+        },
+      
+        "/api/posts/create": {
+            "post": {
+                "description": "add a new post)",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+
+
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "post title",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "description",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "source",
+                        "in": "formData",
+                        "description": "source",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "post"
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "fail"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    }
+                }
+            }
+        },
+        "/api/posts/update": {
+            "post": {
+                "description": "update existed  post)",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "post id",
+                        "required": true,
+                        "type": "string"
+                    },
+
+
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "post title",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "description",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "source",
+                        "in": "formData",
+                        "description": "source",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "post"
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "fail"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    }
+                }
+            }
+
+
+
+        },
+        "/api/getTopPosts": {
+            "get": {
+                "description": "get top posts between two date",
+                "parameters": [
+
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "description": "start date",
+                        "required": true,
+                        "format": "date"
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "description": "end date",
+                        "required": true,
+                        "format": "date"
+                    }
+                ],
+                "tags": [
+                    "post"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "403": {
+                        "description": "unauthorized / user account blocked"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    }
+                }
+            }
+        },
+        "/api/getTopPostsSorted": {
+            "get": {
+                "description": "get top posts in by period",
+                "parameters": [
+
+
+
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "priod ",
+                        "required": true,
+                        "format": "date"
+                    },
+                    {
+                        "name": "value",
+                        "in": "query",
+                        "description": "end last or current",
+                        "required": true,
+                        "format": "date"
+                    }
+                ],
+                "tags": [
+                    "post"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "403": {
+                        "description": "unauthorized / user account blocked"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    }
+                }
+            }
+        },
+        "/api/getTopUsers": {
+            "get": {
+                "description": "get top posts in by period",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "priod ",
+                        "required": true,
+                        "format": "date"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end last or current",
+                        "required": true,
+                        "format": "date"
+                    }
+                ],
+                "tags": [
+                    "post"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "403": {
+                        "description": "unauthorized / user account blocked"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    }
+                }
+            }
+        },
+        "/api/posts/{post_id}/comment": {
+            "post": {
+                "description": "add a new post)",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+
+
+                    {
+                        "name": "comment",
+                        "in": "formData",
+                        "description": "post title",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "post_id",
+                        "in": "path",
+                        "description": "description",
+                        "required": true,
+                        "type": "string"
+                    }
+
+                ],
+                "tags": [
+                    "comment"
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "fail"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    }
+                }
+            }
+        },
+        "/api/posts/comment/{id}": {
+            "get": {
+                "description": "get comment",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id comment",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "tags": [
+                    "comment"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "fail"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    }
+                }
+            }
+        },
+        "/api/posts/comment/": {
+            "delete": {
+                "description": "delete a specific comment)",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id of the post",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "tags": [
+                    "comment"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "fail"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    }
+                }
+            }
+        }
+    }
+}

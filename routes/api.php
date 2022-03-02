@@ -28,6 +28,8 @@ Route::get('/postsByNumberOfComments', [\App\Http\Controllers\Api\PostController
 Route::get('/serachIntoComments', [\App\Http\Controllers\Api\PostController::class, 'serachIntoComments'])->name('serachIntoComments');
 Route::get('/getmails', [\App\Http\Controllers\Api\UserController::class, 'mapUsersWithPosts'])->name('mapUsersWithPosts');
 Route::get('/maps', [\App\Http\Controllers\Api\UserController::class, 'UserCommentOn'])->name('UserCommentOn');
+Route::get('/getTopPostsSorted', [\App\Http\Controllers\Api\PostController::class, 'getTopPostsSorted'])->name('getTopPostsSorted');
+
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -46,7 +48,7 @@ Route::group(['middleware' => ['auth:api']], static function () {
         Route::post('/logout', [\App\Http\Controllers\Api\Auth\LoginController::class, 'logout'])->name('logout');
         Route::get('/me', [\App\Http\Controllers\Api\Auth\LoginController::class, 'getMyProfile'])->name('getMyProfile');
         Route::post('/updateProfile', [\App\Http\Controllers\Api\Auth\LoginController::class, 'updateProfile'])->name('updateProfile');
-        Route::get('/getTopUsers', [\App\Http\Controllers\Api\UserController::class, 'getUsersbyPostsAndComments'])->name('getUsersbyPostsAndComments');
+        Route::get('/getTopUsers', [\App\Http\Controllers\Api\UserController::class, 'getTheMoreActifUsers'])->name('getTheMoreActifUsers');
 
 
 
