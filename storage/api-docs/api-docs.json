@@ -100,6 +100,125 @@
                 }
             }
         },
+        "/api/password/email": {
+            "post": {
+                "description": "forgot password)",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+
+
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email adresse",
+                        "required": true,
+                        "type": "string"
+                    }
+
+                ],
+                "tags": [
+                    "auth"
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "fail"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    }
+                }
+            }
+        },
+        "/api/password/reset": {
+            "post": {
+                "description": "reset password)",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+
+
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email adresse",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "description": "confirm your new password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    }
+
+                ],
+                "tags": [
+                    "auth"
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "fail"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
+                    },
+                    "422": {
+                        "description": "validation error"
+                    }
+                }
+            }
+        },
 
         "/api/posts/": {
             "delete": {
@@ -147,7 +266,7 @@
                 }
             }
         },
-      
+
         "/api/posts/create": {
             "post": {
                 "description": "add a new post)",

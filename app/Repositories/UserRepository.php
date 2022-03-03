@@ -142,9 +142,10 @@ class UserRepository
             ->groupBy('user_id')
             ->orderBy('total_posts', 'desc')
 
+
             ->get();
 
-        return($users);
+        return($users)->toQuery()->paginate(1);
     }
 
 
