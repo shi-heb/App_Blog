@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth:api']], static function () {
            Route::post('/{post_id}/comment/', [\App\Http\Controllers\Api\CommentController::class, 'comment'])->name('comment');
            Route::get('/{post_id}', [\App\Http\Controllers\Api\PostController::class, 'show'])->name('show');
            Route::get('/comment/{comment_id}', [\App\Http\Controllers\Api\CommentController::class, 'show'])->name('show');
-           Route::delete('/', [\App\Http\Controllers\Api\PostController::class, 'destroy'])->name('destroy');
+           Route::delete('/{id_post}', [\App\Http\Controllers\Api\PostController::class, 'destroy'])->name('destroy');
            Route::delete('/comment', [\App\Http\Controllers\Api\CommentController::class, 'deleteComment'])->name('deleteComment');
            Route::post('/update', [\App\Http\Controllers\Api\PostController::class, 'updatePost'])->name('apdate');
            Route::get('/comments/{id}', [\App\Http\Controllers\Api\PostController::class, 'postGetAllComments'])->name('postGetAllComments');

@@ -220,9 +220,9 @@
             }
         },
 
-        "/api/posts/": {
+        "/api/posts/{id_post}": {
             "delete": {
-                "description": "delete a specific comment)",
+                "description": "delete a specific post)",
                 "parameters": [
 
                     {
@@ -234,8 +234,8 @@
                     },
 
                     {
-                        "name": "id",
-                        "in": "query",
+                        "name": "id_post",
+                        "in": "path",
                         "description": "id of the post",
                         "required": true,
                         "type": "integer"
@@ -325,6 +325,42 @@
                     },
                     "422": {
                         "description": "validation error"
+                    }
+                }
+            }
+        },
+        "/api/posts/{post_id}": {
+            "get": {
+                "description": "get top posts between two date",
+                "parameters": [
+
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "jwt token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "post_id",
+                        "in": "path",
+                        "description": "id of the post",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "tags": [
+                    "post"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "403": {
+                        "description": "unauthorized / user account blocked"
+                    },
+                    "401": {
+                        "description": "unauthenticated"
                     }
                 }
             }

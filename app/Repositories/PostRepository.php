@@ -5,6 +5,10 @@ use Carbon\Carbon;
 
 use App\Models\Post;
 use App\Exceptions\ModelNotSavedException;
+use Illuminate\Database\Eloquent\Builder;
+
+use Illuminate\Support\Facades\DB;
+
 
 class PostRepository
 {
@@ -51,12 +55,8 @@ class PostRepository
         $this->post->description = $description;
         $this->post->source = $source;
 
-        if (!$this->post->save()) {
-            //  throw new ModelNotSavedException();
 
-
-        }
-        return $this->post;
+        return $this->post->save();
     }
 
     public function delete()
@@ -137,7 +137,7 @@ class PostRepository
                 break;
 
             default:
-                $msg ='there are no post.';
+             //  throw new ("some thing is wrong with your choices");
         }}
 
     public function filterPosts($start,$end)
@@ -153,6 +153,41 @@ class PostRepository
 
         return ($posts);
     }
+
+    public function serachIntoComments($text)
+    {
+
+        $posts = Post::select(DB::raw('posts.*'))
+            ->join('comments', 'posts.id', '=', 'comments.post_id')
+            ->whereHas('comments')
+            ->where('comment', 'like', $text . '%')
+            ->groupby('id')
+            ->get();
+        return ($posts);
+    }
+
+    public function CommentedPosts()
+    {
+
+        $posts = Post::select(DB::raw('posts.*'))
+            ->whereHas('comments')
+            ->groupby('id')
+            ->get();
+        return ($posts);
+    }
+
+    public function postsByNumberOfComments($nb_comments)
+    {
+        $posts = Post::whereHas('comments', function (Builder $query) {
+
+        }, '>=', $nb_comments)->get();
+
+        return ($posts);
+
+
+
+    }
+
 
 
 

@@ -26,6 +26,9 @@ use App\Models\User;
  */
 class UserController extends Controller
 {
+    /*
+     * get users between two date ordred by number of their comments
+     */
     public function getUsers(Request $request)
     {
         $topPosts = (new UserRepository())->getUsersList($request->get('start'),$request->get('end'));
@@ -37,7 +40,7 @@ class UserController extends Controller
 
 
     /*
-     * return all posts posted between two dates gives a parameter
+     * return all  posted posts between two dates gives a parameter ordred by number of comments
      */
     public function getPosts(Request $request)
     {

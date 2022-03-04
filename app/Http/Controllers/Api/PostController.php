@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\PostRepository;
-use App\Http\Requests\User\PostUpdateRequest;
+use App\Http\Requests\PostupdatePostRequest;
+use App\Http\Requests\PostgetTopPostsRequest;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Dotenv\Exception\ValidationException;
@@ -65,14 +67,8 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::find($id);
-        if (is_null($post)) {
-            //return $this->sendError('Post not found.');
-            return response()->json([
-                'status' => 'fail',
-                'post' => $post
-            ], 404);
-        }
+        $post = Post::findOrFail($id);
+
         return response()->json([
             "success" => true,
             "message" => "Post retrieved successfully.",
@@ -81,14 +77,15 @@ class PostController extends Controller
     }
 
 
-    public function destroy(Request $request)
+    public function destroy(Request $request,$id_post)
     {
-        //$post = Post::query()->findOrFail($request->input('id'));
-
+       /*
+        * get the id of the current user
+        */
         $user_id = auth('api')->id();
 
         $user = User::query()->findOrFail($user_id);
-        $post = $user->posts()->findOrFail($request->input('id'));
+        $post = $user->posts()->findOrFail($id_post);
 
 
         $res = (new PostRepository($post))->delete();
@@ -100,22 +97,10 @@ class PostController extends Controller
     }
 
 
-    public function updatePost(Request $request)
+    public function updatePost(PostupdatePostRequest $request)
     {
 
-        $validator = null;
-        try {
-            $validator = Validator::make($request->all(), [
-                'title' => ['required', 'string'],
-                'description' => ['required', 'string'],
-                'source' => ['required', 'string'],
-            ]);
-            if ($validator->fails()) {
-                throw new ValidationException();
-            }
-        } catch (ValidationException $e) {
-            return response()->json($validator->errors(), 422);
-        }
+
         $user_id = auth('api')->id();
         //$post = $user->posts->findOrFail($id);
         $user = User::query()->findOrFail($user_id);
@@ -132,29 +117,22 @@ class PostController extends Controller
 
 
     /*
-     * return all comments related to all posts
+     * return all comments related to a posts given by id
      */
     public function postGetAllComments($id)
     {
         $post = Post::query()->findOrFail($id);
-        $com = $post->comments()->get();
+        $commentaires = $post->comments()->get();
 
-        if (is_null($com)) {
-            //return $this->sendError('Post not found.');
-            return response()->json([
-                'status' => 'fail',
-                'post' => $com
-            ], 404);
-        }
         return response()->json([
             "success" => true,
             "message" => "comments retrieved successfully.",
-            "data" => $com
+            "data" => $commentaires
         ]);
     }
 
 
-    public function getTopPosts(Request $request)
+    public function getTopPosts(PostgetTopPostsRequest $request)
     {
         $topPosts = (new PostRepository)->filterPosts($request->get('start'),$request->get('end'));
         return response()->json([
@@ -165,19 +143,15 @@ class PostController extends Controller
     }
 
     /*
-     * search comments that contain text given as parameter
+     * search posts that contain text (part of text comment) given as parameter
      */
     public function serachIntoComments(Request $request)
     {
-        $item = $request->text;
-
-        $posts = Post::select(DB::raw('posts.*'))
-            ->join('comments', 'posts.id', '=', 'comments.post_id')
-            ->whereHas('comments')
-            ->where('comment', 'like', $item . '%')
-            ->groupby('id')
-            ->get();
-        return ($posts);
+        $Posts = (new PostRepository)->serachIntoComments($request->get('text'));
+        return response()->json([
+            'status' => 'success',
+            'Posts ' => $Posts
+        ], 200);
     }
 
     /*
@@ -185,24 +159,20 @@ class PostController extends Controller
      */
     public function CommentedPosts()
     {
-
-        $posts = Post::select(DB::raw('posts.*'))
-            ->whereHas('comments')
-            ->groupby('id')
-            ->get();
-        return ($posts);
+        $Posts = (new PostRepository)->CommentedPosts();
+        return response()->json([
+            'status' => 'success',
+            'Posts ' => $Posts
+        ], 200);
     }
+
 
     /*
      * return posts who with such number of comments
      */
     public function postsByNumberOfComments(Request $request)
     {
-        $nb_comments = $request->nb;
-
-        $posts = Post::whereHas('comments', function (Builder $query) {
-
-        }, '>=', $nb_comments)->get();
+        $posts = (new PostRepository)->postsByNumberOfComments($request->get('nb_comments'));
 
         if ($posts->count() == 0) {
             return response()->json([
